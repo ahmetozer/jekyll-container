@@ -9,9 +9,10 @@ RUN apt update && \
  find /var/lib/apt/lists/ -maxdepth 1 -type f -print0 | xargs -0 rm
 
 COPY --from=ubuntu /var/cache/apt /var/cache/apt
+WORKDIR /root/
 RUN echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc &&\
 echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc &&\
 echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc &&\
-source ~/.bashrc && \
+./.bashrc && \
 gem update --system && \
 gem install jekyll bundler
