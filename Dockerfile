@@ -1,18 +1,9 @@
-FROM ubuntu as jekyll
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt update && \
- apt upgrade -y && \
- apt install -y --no-install-recommends ruby-full build-essential zlib1g-dev ca-certificates && \
- apt autoclean && \
- apt autoremove && \
- rm -rf /var/cache/apt && \
- find /var/lib/apt/lists/ -maxdepth 1 -type f -print0 | xargs -0 rm
-
-COPY --from=ubuntu /var/cache/apt /var/cache/apt
-WORKDIR /root/
-RUN echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc &&\
-echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc &&\
-echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc &&\
-./.bashrc && \
+FROM alpine as jekyll
+RUN apk add ruby-full ruby-dev make gcc build-base
+RUN echo 'export GEM_HOME="$HOME/gems"' >> /etc/profile.d/jekyll.sh &&\
+echo 'export PATH="$HOME/gems/bin:$PATH"' >> /etc/profile.d/jekyll.sh &&\
+chmod +x /etc/profile.d/jekyll.sh &&\
+. /etc/profile.d/jekyll.sh && \
 gem update --system && \
 gem install jekyll bundler
+WORKDIR /srv/jekyll/
