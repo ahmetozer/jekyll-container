@@ -1,5 +1,5 @@
 FROM alpine as jekyll
-RUN apk add ruby-full ruby-dev make gcc build-base
+RUN apk add ruby-full ruby-dev make gcc build-base openssl
 
 
 ENV BUNDLE_SILENCE_ROOT_WARNING=1
